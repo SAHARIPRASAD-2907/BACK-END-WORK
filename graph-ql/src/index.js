@@ -7,33 +7,33 @@ import { GraphQLServer } from 'graphql-yoga';
 //Type definitions schema (schema)
 const typeDefs = `
     type Query{
-        id: ID!
-        name: String!
-        age:Int!
-        employed:Boolean!
-        gpa:Float
-        rating:float
+        title:String!,
+        price:Float!,
+        releaseYear:Int,
+        rating:Float,
+        inStock:Boolean!
     }
 `
 
 //Resolvers
 const resolvers = {
     Query: {
-        id() {
-            return 'abc123'
+        title() {
+            return "Maths Book"
         },
-        name() {
-            return "Hari"
+        price() {
+            return 22.5
         },
-        age() {
-            return 22
+        releaseYear() {
+            return 2021
         },
-        employed() {
-            return true
+        rating() {
+            return 4.2
         },
-        gpa() {
-            return 8.66
+        inStock() {
+            return 3.5;
         }
+
     }
 }
 
