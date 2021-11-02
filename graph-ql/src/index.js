@@ -1,29 +1,38 @@
 import { GraphQLServer } from 'graphql-yoga';
 
+//Types of scalar data
+//5 scalar types in graph QL
+// String, Boolean, Int, Float,ID
+
 //Type definitions schema (schema)
 const typeDefs = `
     type Query{
-        hello: String!
-        myName: String!
-        location: String!
-        bio:String!
+        id: ID!
+        name: String!
+        age:Int!
+        employed:Boolean!
+        gpa:Float
+        rating:float
     }
 `
 
 //Resolvers
 const resolvers = {
     Query: {
-        hello() {
-            return 'This is my first query!'
+        id() {
+            return 'abc123'
         },
-        myName(){
-            return "My name is hari"
+        name() {
+            return "Hari"
         },
-        location() {
-            return "I am living in chennai"
+        age() {
+            return 22
         },
-        bio() {
-            return "I am a web developer and data scientist"
+        employed() {
+            return true
+        },
+        gpa() {
+            return 8.66
         }
     }
 }
