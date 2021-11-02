@@ -6,7 +6,7 @@
   "author": "S A HARIPRASAD",
   "license": "MIT",
   "scripts": {
-    "start": "babel-node src/index.js"
+    "start": "nodemon src/index.js --exec babel-node"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
