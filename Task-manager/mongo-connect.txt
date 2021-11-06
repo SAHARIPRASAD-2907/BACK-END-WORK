@@ -1,0 +1,1 @@
+'/Users/sahariprasad/Documents/mongodb/bin/mongod' --dbpath='/Users/sahariprasad/Documents/mongo-data'
