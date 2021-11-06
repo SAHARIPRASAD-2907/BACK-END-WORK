@@ -29,7 +29,7 @@ const User = mongoose.model("User", {
     trim: true,
     minlength: 7,
     validate(value) {
-      if (value.includes("password")) {
+      if (value.toLowerCase().includes("password")) {
         throw new Error("password should not contain password as string");
       }
     },
@@ -48,9 +48,12 @@ const User = mongoose.model("User", {
 const Tasks = mongoose.model("Tasks", {
   description: {
     type: String,
+    required: true,
+    trim: true,
   },
   completed: {
     type: Boolean,
+    default: false,
   },
 });
 
