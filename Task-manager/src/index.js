@@ -46,10 +46,33 @@ app.get("/users", async (req, res) => {
 
 //read single user
 app.get("/users/:id", async (req, res) => {
+  const user = await User.find({ _id: req.params.id });
   try {
-    const user = await User.find({ _id: req.params.id });
     if (!user) {
       return res.status(500).send("No data found");
+    }
+    res.send(user);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+//User updating end point
+app.patch("/users/:id", async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdate = ["name", "email", "password", "age"];
+  const isvalidOperation = updates.every((update) => {
+    return allowedUpdate.includes(update);
+  });
+  if (!isvalidOperation) {
+    return res.status(400).send({ error: "Invalid updates!" });
+  }
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!user) {
+      return res.status(404).send("No data found to update");
     }
     res.send(user);
   } catch (e) {
@@ -83,6 +106,8 @@ app.get("/tasks", async (req, res) => {
   }
 });
 
+// read individual task
+
 app.get("/tasks/:id", async (req, res) => {
   try {
     const task = await Task.find({ _id: req.params.id });
@@ -91,5 +116,29 @@ app.get("/tasks/:id", async (req, res) => {
     }
   } catch (e) {
     res.send(500).send(e);
+  }
+});
+
+// update task by id
+app.patch("/tasks/:id", async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["description", "completed"];
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid updates" });
+  }
+  try {
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!task) {
+      return res.status(404).send();
+    }
+    res.send(task);
+  } catch (e) {
+    res.status(400).send(e);
   }
 });
