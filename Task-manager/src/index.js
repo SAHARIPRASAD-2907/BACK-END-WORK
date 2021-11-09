@@ -20,74 +20,76 @@ app.get("/", (req, res) => {
 
 // User endpoints
 //user creation
-app.post("/users", (req, res) => {
+app.post("/users", async (req, res) => {
   const user = new User(req.body);
-  user
-    .save()
-    .then(() => {
-      res.send(201);
-      res.send(user);
-    })
-    .catch((e) => {
-      res.send(400);
-      res.send(e);
-    });
+  console.log(user);
+  try {
+    await user.save();
+    res.status(201).send(user);
+  } catch (e) {
+    res.status(400);
+    res.send(e);
+  }
 });
 //read users
-app.get("/users", (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.send(users);
-    })
-    .catch(() => {
-      res.status(500).send("Error in accessing data");
-    });
+app.get("/users", async (req, res) => {
+  try {
+    const users = await User.find({});
+    if (!users) {
+      return res.status(500).send("No data found");
+    }
+    res.status(201).send(users);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
+
 //read single user
-app.get("/users/:id", (req, res) => {
-  User.find({ id: req.params.id })
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((e) => {
-      res.status(500).send(e);
-    });
+app.get("/users/:id", async (req, res) => {
+  try {
+    const user = await User.find({ _id: req.params.id });
+    if (!user) {
+      return res.status(500).send("No data found");
+    }
+    res.send(user);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
 //Tasks endpoint
 // Task creation
-app.post("/tasks", (req, res) => {
+app.post("/tasks", async (req, res) => {
   const task = new Task(req.body);
-  task
-    .save()
-    .then(() => {
-      res.send(201);
-      res.send(task);
-    })
-    .catch((e) => {
-      res.status(400);
-      res.send(e);
-    });
+  try {
+    await task.save();
+    res.status(201).send(task);
+  } catch {
+    res.status(400);
+    res.send(e);
+  }
 });
 
 //read tasks
 
-app.get("/tasks", (req, res) => {
-  Task.find({})
-    .then((task) => {
-      res.send(task);
-    })
-    .catch((e) => {
-      res.status(500).send(e);
-    });
+app.get("/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find({});
+    if (tasks) {
+      res.send(tasks);
+    }
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
-app.get("/tasks/:id", (req, res) => {
-  Task.find({ id: req.params.id })
-    .then((task) => {
+app.get("/tasks/:id", async (req, res) => {
+  try {
+    const task = await Task.find({ _id: req.params.id });
+    if (task) {
       res.send(task);
-    })
-    .catch((e) => {
-      res.send(500).send(e);
-    });
+    }
+  } catch (e) {
+    res.send(500).send(e);
+  }
 });
