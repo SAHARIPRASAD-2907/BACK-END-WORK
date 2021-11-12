@@ -15,6 +15,19 @@ router.post("/users", async (req, res) => {
     res.send(e);
   }
 });
+//user login endpoint
+router.post("/users/login", async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+    res.send("login sucessfull");
+  } catch (e) {
+    res.status(400).send();
+  }
+});
+
 //read users
 router.get("/users", async (req, res) => {
   try {
