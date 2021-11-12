@@ -1,6 +1,6 @@
 const express = require("express");
 const router = new express.Router();
-const User = require("../models/user"); //users model
+const User = require("../models/user.model"); //users model
 
 // User endpoints
 //user creation
@@ -9,7 +9,8 @@ router.post("/users", async (req, res) => {
   console.log(user);
   try {
     await user.save();
-    res.status(201).send(user);
+    const token = await user.generateAuthToken();
+    res.status(201).send({ user, token });
   } catch (e) {
     res.status(400);
     res.send(e);
@@ -22,7 +23,8 @@ router.post("/users/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
-    res.send("login sucessfull");
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
   } catch (e) {
     res.status(400).send();
   }

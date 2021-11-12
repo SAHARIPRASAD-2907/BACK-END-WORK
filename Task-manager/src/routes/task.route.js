@@ -1,6 +1,6 @@
 const express = require("express");
 const router = new express.Router();
-const Task = require("../models/task"); //tasks model
+const Task = require("../models/task.model"); //tasks model
 
 //Tasks endpoint
 // Task creation

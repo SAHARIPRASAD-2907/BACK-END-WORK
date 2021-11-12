@@ -1,4 +1,7 @@
 '/Users/sahariprasad/Documents/mongodb/bin/mongod' --dbpath='/Users/sahariprasad/Documents/mongodb-data'
 
 LIST OUT ALL ACTIVE PROCESSES
-sudo lsof -PiTCP -sTCP:LISTEN
+sudo lsof -PiTCP -sTCP:LISTEN   
+
+if error 
+reinstall mongodb as the main one is server
