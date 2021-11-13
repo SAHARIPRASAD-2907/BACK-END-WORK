@@ -1,5 +1,6 @@
 const express = require("express");
 const router = new express.Router();
+const auth = require("../middleware/auth.middleware");
 const User = require("../models/user.model"); //users model
 
 // User endpoints
@@ -30,17 +31,32 @@ router.post("/users/login", async (req, res) => {
   }
 });
 
-//read users
-router.get("/users", async (req, res) => {
+//user logout
+router.post("/users/logout", auth, async (req, res) => {
   try {
-    const users = await User.find({});
-    if (!users) {
-      return res.status(500).send("No data found");
-    }
-    res.status(201).send(users);
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token;
+    });
+    await req.user.save();
+    res.send("user logged out sucessfully");
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//users logoutAll
+router.post("/users/logoutAll", auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.send("all users logged out");
   } catch (e) {
     res.status(500).send(e);
   }
+});
+//read users
+router.get("/users/me", auth, async (req, res) => {
+  res.send(req.user);
 });
 
 //read single user

@@ -6,15 +6,6 @@ const taskRouter = require("./routes/task.route");
 const app = express();
 const port = process.env.PORT || 3000;
 
-//express middleware for authentication
-// app.use((req, res, next) => {
-//   if (req.method === "GET") {
-//     res.send("GET requests are disabled");
-//   } else {
-//     next();
-//   }
-// });
-
 //site MAINTENANCE website
 // app.use((req, res, next) => {
 //   if (req.method) return res.send("SITE UNDER MAINTENANCE");
