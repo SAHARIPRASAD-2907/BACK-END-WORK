@@ -1,4 +1,4 @@
-import { GraphQLServer } from 'graphql-yoga';
+import { GraphQLServer } from "graphql-yoga";
 
 //Types of scalar data
 //5 scalar types in graph QL
@@ -8,7 +8,8 @@ import { GraphQLServer } from 'graphql-yoga';
 const typeDefs = `
     type Query{
         greeting(name: String,position:String):String!
-        add(a: Float!,b: Float!):Float!
+        add(numbers: [Float!]!):Float!
+        grades:[Int!]!
         me:User!
         post:Post!
     }
@@ -25,56 +26,56 @@ const typeDefs = `
         body:String!,
         published:String!,
     }
-`
+`;
 
 //Resolvers
 const resolvers = {
-    Query: {
-        add(parent, args, ctx, info) {
-            if(args.a && args.b){
-                return args.a + args.b;
-            }
-            else{
-                return 0;
-            }
-        },
-        greeting(parent, args, ctx, info) {
-            //console.log(parent);
-            console.log(args);
-            //console.log(ctx);
-            //console.log(info);
-            if (args.name && args.position) {
-                return `Hello , ${args.name} you are my favorite ${args.position}`
-            } else {
-                return 'Hello!'
-            }
-        },
-        me() {
-            return {
-                id: '3257',
-                name: 'mike',
-                email: "mike@gmail.com",
-                age:28
-            }
-        },
-        post() {
-            return {
-                id: '123',
-                body: "myFirstpost",
-                published:"29/07/21"
-            }
-        }
-
-
-    }
-}
+  Query: {
+    add(parent, args, ctx, info) {
+      if (args.numbers.length === 0) {
+        return 0;
+      }
+      return args.numbers.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+      });
+    },
+    greeting(parent, args, ctx, info) {
+      //console.log(parent);
+      console.log(args);
+      //console.log(ctx);
+      //console.log(info);
+      if (args.name && args.position) {
+        return `Hello , ${args.name} you are my favorite ${args.position}`;
+      } else {
+        return "Hello!";
+      }
+    },
+    grades(parent, args, ctx, info) {
+      return [99, 83, 71];
+    },
+    me() {
+      return {
+        id: "3257",
+        name: "mike",
+        email: "mike@gmail.com",
+        age: 28,
+      };
+    },
+    post() {
+      return {
+        id: "123",
+        body: "myFirstpost",
+        published: "29/07/21",
+      };
+    },
+  },
+};
 
 const server = new GraphQLServer({
-    typeDefs,
-    resolvers
-})
+  typeDefs,
+  resolvers,
+});
 
 server.start(() => {
-    console.log("The server is up");
-})
-
+  console.log("The server is up in 4000");
+});
