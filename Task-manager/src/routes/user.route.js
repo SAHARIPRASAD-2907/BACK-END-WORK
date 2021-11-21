@@ -7,7 +7,6 @@ const User = require("../models/user.model"); //users model
 //user creation
 router.post("/users", async (req, res) => {
   const user = new User(req.body);
-  console.log(user);
   try {
     await user.save();
     const token = await user.generateAuthToken();
@@ -25,6 +24,7 @@ router.post("/users/login", async (req, res) => {
       req.body.password
     );
     const token = await user.generateAuthToken();
+    console.log(user);
     res.send({ user, token });
   } catch (e) {
     res.status(400).send();
@@ -59,20 +59,8 @@ router.get("/users/me", auth, async (req, res) => {
   res.send(req.user);
 });
 
-//read single user
-router.get("/users/:id", async (req, res) => {
-  const user = await User.find({ _id: req.params.id });
-  try {
-    if (!user) {
-      return res.status(500).send("No data found");
-    }
-    res.send(user);
-  } catch (e) {
-    res.status(500).send(e);
-  }
-});
 //User updating end point
-router.patch("/users/:id", async (req, res) => {
+router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdate = ["name", "email", "password", "age"];
   const isvalidOperation = updates.every((update) => {
@@ -82,27 +70,20 @@ router.patch("/users/:id", async (req, res) => {
     return res.status(400).send({ error: "Invalid updates!" });
   }
   try {
-    const user = await User.findById(req.params.id);
     allowedUpdate.forEach((update) => {
-      user[update] = req.body[update];
+      req.user[update] = req.body[update];
     });
-    await user.save();
-    if (!user) {
-      return res.status(404).send("No data found to update");
-    }
-    res.send(user);
+    await req.user.save();
+    res.send(req.user);
   } catch (e) {
     res.status(500).send(e);
   }
 });
 // Delete users
-router.delete("/users/:id", async (req, res) => {
+router.delete("/users/me", auth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).send();
-    }
-    res.send(user);
+    await req.user.remove();
+    res.send("User deleted successfully");
   } catch (e) {
     res.status(500).send(e);
   }

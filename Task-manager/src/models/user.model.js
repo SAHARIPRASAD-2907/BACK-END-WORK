@@ -51,6 +51,25 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+userSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "owner",
+});
+
+// setting up send public profile data
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+  console.log("---------------------");
+  console.log(userObject);
+  return userObject;
+};
+
+// setting up token authentication
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "thisismynewcourse");
@@ -82,6 +101,8 @@ userSchema.pre("save", async function (next) {
 
   next();
 });
+
+//Deletes users tasks when user is removed
 
 const User = mongoose.model("User", userSchema);
 
